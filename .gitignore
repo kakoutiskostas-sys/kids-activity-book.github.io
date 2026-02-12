@@ -1,0 +1,9 @@
+# Ignore everything in the repo
+/*
+
+# But keep .gitignore itself and the root index.html
+!/.gitignore
+!/index.html
+
+# (Allow git to still traverse directories)
+!/*/

@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Μια Μέρα στο Σπίτι - Βιβλίο Δραστηριοτήτων</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            touch-action: manipulation;
+        }
+        
+        .book-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            touch-action: manipulation;
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-btn.activity1 { background: #ff9a9e; color: white; }
+        .nav-btn.activity2 { background: #a18cd1; color: white; }
+        .nav-btn.activity3 { background: #fbc2eb; color: white; }
+        .nav-btn.activity4 { background: #84fab0; color: #333; }
+        
+        .page {
+            display: none;
+            padding: 40px 20px;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .page h2 {
+            color: #764ba2;
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-align: center;
+        }
+        
+        .page-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            font-style: italic;
+        }
+        
+        /* Activity 1: Connect the dots */
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #fff;
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        #drawCanvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            touch-action: none;
+        }
+        
+        .canvas-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .control-btn {
+            padding: 12px 25px;
+            margin: 5px;
+            font-size: 1em;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .clear-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .color-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #ddd;
+            margin: 5px;
+        }
+        
+        /* Activity 2: Find differences */
+        .images-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .image-box {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            aspect-ratio: 1;
+            background: #f0f0f0;
+            border-radius: 15px;
+            padding: 20px;
+            border: 3px solid #a18cd1;
+        }
+        
+        .difference-spot {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 3px dashed transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+
+        }
+        
+        .difference-spot:hover {
+            border-color: rgba(132, 250, 176, 0.5);
+            background: rgba(132, 250, 176, 0.1);
+        }
+        
+        .difference-spot.found {
+            border-color: #84fab0;
+            background: rgba(132, 250, 176, 0.3);
+            animation: pulse 0.5s;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .score-display {
+            text-align: center;
+            font-size: 1.5em;
+            color: #764ba2;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        /* Activity 3: Maze */
+        .maze-container {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        #mazeCanvas {
+            display: block;
+            width: 100%;
+            border: 3px solid #fbc2eb;
+            border-radius: 15px;
+            background: white;
+            touch-action: none;
+        }
+        
+        .maze-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        /* Activity 4: Counting game */
+        .counting-container {
+            text-align: center;
+        }
+        
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .count-item {
+            font-size: 3em;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        
+        .count-item:active {
+            transform: scale(0.9);
+        }
+        
+        .count-item.clicked {
+            opacity: 0.3;
+            transform: scale(0.8);
+        }
+        
+        .answer-section {
+            margin-top: 30px;
+        }
+        
+        .number-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .number-btn {
+            width: 70px;
+            height: 70px;
+            font-size: 2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 50%;
+            background: #84fab0;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .number-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .number-btn.correct {
+            background: #00d084;
+            animation: bounce 0.5s;
+        }
+        
+        .number-btn.wrong {
+            background: #ff6b6b;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .success-message {
+            font-size: 2em;
+            color: #00d084;
+            font-weight: bold;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        /* Activity 5: Memory Game */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 350px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+        
+        @media (min-width: 500px) {
+            .memory-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+                max-width: 600px;
+            }
+        }
+        
+        .memory-card {
+            aspect-ratio: 1;
+            min-height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .memory-card:active {
+            transform: scale(0.95);
+        }
+        
+        .memory-card.flipped {
+            background: white;
+            border: 3px solid #764ba2;
+        }
+        
+        .memory-card.matched {
+            background: #84fab0;
+            border: 3px solid #00d084;
+            cursor: default;
+            opacity: 0.7;
+        }
+        
+        .memory-card .back {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: white;
+        }
+        
+        .memory-card .front {
+            display: none;
+        }
+        
+        .memory-card.flipped .back {
+            display: none;
+        }
+        
+        .memory-card.flipped .front {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .memory-stats {
+            text-align: center;
+            font-size: 1.3em;
+            color: #764ba2;
+            margin-top: 20px;
+        }
+        
+        /* Activity 6: Paint by Numbers */
+        .paint-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .paint-canvas-wrapper {
+            position: relative;
+            background: white;
+            border: 3px solid #fbc2eb;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        #paintCanvas {
+            display: block;
+            width: 100%;
+            cursor: pointer;
+            touch-action: none;
+        }
+        
+        .paint-palette {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .paint-color {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 4px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .paint-color:active {
+            transform: scale(0.9);
+        }
+        
+        .paint-color.selected {
+            border-color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            transform: scale(1.1);
+        }
+        
+        .paint-hint {
+            text-align: center;
+            color: #666;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+        
+        /* Activity 7: Size Ordering */
+        .puzzle-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .size-order-slots {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: flex-end;
+            margin: 30px auto;
+            max-width: 550px;
+            min-height: 200px;
+            padding: 20px;
+            background: linear-gradient(to top, #e8f5e9 0%, transparent 100%);
+            border-radius: 15px;
+            border: 3px dashed #764ba2;
+        }
+        
+        .size-slot {
+            flex: 1;
+            min-width: 80px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 3px dashed #bbb;
+            border-radius: 10px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 10px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .size-slot::before {
+            content: attr(data-size);
+            position: absolute;
+            bottom: -25px;
+            font-size: 0.9em;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .size-slot.filled {
+            background: rgba(132, 250, 176, 0.3);
+            border-color: #00d084;
+        }
+        
+        .size-slot.drag-over {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+        
+        .puzzle-pieces-tray {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        .puzzle-piece-draggable {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            cursor: grab;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            user-select: none;
+            touch-action: none;
+        }
+        
+        .puzzle-piece-draggable:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+        
+        .puzzle-piece-draggable.placed {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        /* Activity 8: Music */
+        .music-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .piano-keys {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 30px auto;
+            max-width: 500px;
+        }
+        
+        .piano-key {
+            flex: 1;
+            height: 200px;
+            border-radius: 0 0 10px 10px;
+            cursor: pointer;
+            transition: all 0.1s;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+        
+        .piano-key:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .music-pattern {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        .pattern-display {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .pattern-note {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Activity 9: Clock */
+        .clock-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .clock-display {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 50%;
+            border: 8px solid #764ba2;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .clock-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        
+        .clock-hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            background: #333;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .hour-hand {
+            width: 8px;
+            height: 70px;
+            margin-left: -4px;
+            background: #333;
+            z-index: 3;
+        }
+        
+        .minute-hand {
+            width: 6px;
+            height: 100px;
+            margin-left: -3px;
+            background: #666;
+            z-index: 2;
+        }
+        
+        .clock-numbers {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .clock-number {
+            position: absolute;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .time-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        .time-option {
+            padding: 15px 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            background: #a8edea;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .time-option:active {
+            transform: scale(0.95);
+        }
+        
+        .time-option.correct {
+            background: #84fab0;
+            animation: bounce 0.5s;
+        }
+        
+        .time-option.wrong {
+            background: #ff6b6b;
+            animation: shake 0.5s;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.8em; }
+            .header p { font-size: 1em; }
+            .page { padding: 20px; }
+            .page h2 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="book-container">
+        <div class="header">
+            <h1>🏠 Μια Μέρα στο Σπίτι</h1>
+            <p>Βιβλίο Δραστηριοτήτων για Παιδιά 4-6 ετών</p>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="nav-btn activity1" onclick="showPage('activity1')">🎨 Ζωγράφισε</button>
+            <button class="nav-btn activity2" onclick="showPage('activity2')">🔍 Βρες Διαφορές</button>
+            <button class="nav-btn activity3" onclick="showPage('activity3')">🎯 Λαβύρινθος</button>
+            <button class="nav-btn activity4" onclick="showPage('activity4')">🔢 Μέτρημα</button>
+            <button class="nav-btn activity1" onclick="showPage('activity5')">🎴 Ταίριασμα</button>
+            <button class="nav-btn activity2" onclick="showPage('activity6')">🖍️ Χρωματισμός</button>
+            <button class="nav-btn activity3" onclick="showPage('activity7')">📏 Σειρά Μεγέθους</button>
+            <button class="nav-btn activity4" onclick="showPage('activity8')">🎵 Μουσική</button>
+            <button class="nav-btn activity1" onclick="showPage('activity9')">🕐 Ρολόι</button>
+        </div>
+        
+        <!-- Activity 1: Drawing -->
+        <div id="activity1" class="page">
+            <h2>🎨 Ζωγράφισε!</h2>
+            <p class="page-subtitle" id="drawingSubtitle">Ένωσε τις τελείες και βάψε το σπίτι με τα αγαπημένα σου χρώματα!</p>
+            
+            <div style="text-align: center; margin-bottom: 15px;">
+                <span style="font-weight: bold; color: #764ba2; font-size: 1.1em;">Ζωγραφιά <span id="drawingNumber">1</span>/3</span>
+            </div>
+            
+            <div class="canvas-container">
+                <canvas id="drawCanvas" width="500" height="500"></canvas>
+            </div>
+            
+            <div class="canvas-controls">
+                <p style="margin-bottom: 10px; font-weight: bold; color: #666;">Διάλεξε χρώμα:</p>
+                <button class="color-btn" style="background: #ff6b6b;" onclick="changeColor('#ff6b6b')"></button>
+                <button class="color-btn" style="background: #4ecdc4;" onclick="changeColor('#4ecdc4')"></button>
+                <button class="color-btn" style="background: #ffe66d;" onclick="changeColor('#ffe66d')"></button>
+                <button class="color-btn" style="background: #a8e6cf;" onclick="changeColor('#a8e6cf')"></button>
+                <button class="color-btn" style="background: #ff8b94;" onclick="changeColor('#ff8b94')"></button>
+                <br>
+                <button class="control-btn clear-btn" onclick="clearCanvas()">Σβήσε Όλα</button>
+                <button class="control-btn" style="background: #4ecdc4; color: white;" onclick="nextDrawing()">Επόμενη Ζωγραφιά →</button>
+            </div>
+        </div>
+        
+        <!-- Activity 2: Find Differences -->
+        <div id="activity2" class="page">
+            <h2>🔍 Βρες τις 5 Διαφορές!</h2>
+            <p class="page-subtitle" id="differencesSubtitle">Το δωμάτιο του Νίκου έχει κάτι περίεργο... Μπορείς να βρεις τι άλλαξε;</p>
+            
+            <div style="text-align: center; margin-bottom: 15px;">
+                <span style="font-weight: bold; color: #764ba2; font-size: 1.1em;">Εικόνα <span id="differencesNumber">1</span>/3</span>
+            </div>
+            
+            <div class="images-container" id="differencesContainer">
+                <!-- Images will be generated by JavaScript -->
+            </div>
+            
+            <div class="score-display">Διαφορές που βρήκες: <span id="differencesFound">0</span>/5</div>
+            <div class="canvas-controls" style="margin-top: 20px;">
+                <button class="control-btn" style="background: #4ecdc4; color: white;" onclick="nextDifferences()">Επόμενη Εικόνα →</button>
+            </div>
+            <div class="success-message" id="differencesSuccess">🎉 Μπράβο! Τις βρήκες όλες!</div>
+        </div>
+        
+        <!-- Activity 3: Maze -->
+        <div id="activity3" class="page">
+            <h2>🎯 Λαβύρινθος!</h2>
+            <p class="page-subtitle" id="mazeSubtitle">Σχεδίασε το δρόμο με το δάχτυλό σου από το δωμάτιο μέχρι τα μπισκότα! 🍪</p>
+            
+            <div style="text-align: center; margin-bottom: 15px;">
+                <span style="font-weight: bold; color: #764ba2; font-size: 1.1em;">Λαβύρινθος <span id="mazeNumber">1</span>/3</span>
+            </div>
+            
+            <div class="maze-container">
+                <canvas id="mazeCanvas" width="500" height="500"></canvas>
+            </div>
+            
+            <div class="maze-controls">
+                <button class="control-btn clear-btn" onclick="resetMaze()">Ξεκίνα Ξανά</button>
+                <button class="control-btn" style="background: #4ecdc4; color: white;" onclick="nextMaze()">Επόμενος Λαβύρινθος →</button>
+            </div>
+            <div class="success-message" id="mazeSuccess">🎉 Τέλεια! Έφτασες στον προορισμό!</div>
+        </div>
+        
+        <!-- Activity 4: Counting -->
+        <div id="activity4" class="page">
+            <h2>🔢 Πόσα Παιχνίδια Έχουμε;</h2>
+            <p class="page-subtitle">Μέτρησε τα παιχνίδια και πάτησε τον σωστό αριθμό!</p>
+            
+            <div class="counting-container">
+                <div class="items-grid" id="itemsGrid">
+                    <!-- Items will be generated by JavaScript -->
+                </div>
+                
+                <div class="answer-section">
+                    <p style="font-size: 1.3em; margin-bottom: 15px;">Πόσα παιχνίδια βλέπεις;</p>
+                    <div class="number-buttons" id="numberButtons">
+                        <!-- Numbers will be generated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="success-message" id="countingSuccess">🌟 Μπράβο! Μέτρησες σωστά!</div>
+            </div>
+        </div>
+        
+        <!-- Activity 5: Memory Game -->
+        <div id="activity5" class="page">
+            <h2>🎴 Βρες τα Ζευγάρια!</h2>
+            <p class="page-subtitle">Ανακάλυψε ποια αντικείμενα του σπιτιού είναι ίδια!</p>
+            
+            <div class="memory-stats">
+                Ζευγάρια: <span id="pairsFound">0</span>/4 | Κινήσεις: <span id="moves">0</span>
+            </div>
+            
+            <div class="memory-grid" id="memoryGrid">
+                <!-- Cards will be generated by JavaScript -->
+            </div>
+            
+            <div class="canvas-controls">
+                <button class="control-btn clear-btn" onclick="resetMemory()">Παίξε Ξανά</button>
+            </div>
+            
+            <div class="success-message" id="memorySuccess">🎉 Συγχαρητήρια! Βρήκες όλα τα ζευγάρια!</div>
+        </div>
+        
+        <!-- Activity 6: Paint by Numbers -->
+        <div id="activity6" class="page">
+            <h2>🖍️ Ζωγράφισε με Αριθμούς!</h2>
+            <p class="page-subtitle">Κάθε αριθμός έχει το δικό του χρώμα. Πάτα τον αριθμό για να τον βάψεις!</p>
+            
+            <div class="paint-container">
+                <p class="paint-hint">Διάλεξε χρώμα και πάτα τους αριθμούς:</p>
+                
+                <div class="paint-palette" id="paintPalette">
+                    <!-- Color buttons will be generated -->
+                </div>
+                
+                <div class="paint-canvas-wrapper">
+                    <canvas id="paintCanvas" width="500" height="500"></canvas>
+                </div>
+                
+                <div class="canvas-controls">
+                    <button class="control-btn clear-btn" onclick="resetPaint()">Ξεκίνα Ξανά</button>
+                </div>
+                
+                <div class="success-message" id="paintSuccess">🌈 Τέλεια δουλειά! Ολοκλήρωσες τη ζωγραφιά!</div>
+            </div>
+        </div>
+        
+        <!-- Activity 7: Size Ordering -->
+        <div id="activity7" class="page">
+            <h2>📏 Βάλε με τη Σειρά!</h2>
+            <p class="page-subtitle">Σύρε τα αντικείμενα από το πιο μικρό στο πιο μεγάλο!</p>
+            
+            <div class="puzzle-container">
+                <div class="puzzle-pieces-tray" id="puzzleTray">
+                    <!-- Draggable items will be generated -->
+                </div>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <p style="font-size: 1.2em; color: #764ba2; font-weight: bold;">↓ Σύρε εδώ από μικρό σε μεγάλο ↓</p>
+                </div>
+                
+                <div class="size-order-slots" id="sizeSlots">
+                    <!-- Drop zones will be generated -->
+                </div>
+                
+                <div class="canvas-controls">
+                    <button class="control-btn clear-btn" onclick="resetPuzzle()">Παίξε Ξανά</button>
+                </div>
+                
+                <div class="success-message" id="puzzleSuccess">🎉 Συγχαρητήρια! Τα έβαλες όλα σωστά!</div>
+            </div>
+        </div>
+        
+        <!-- Activity 8: Music -->
+        <div id="activity8" class="page">
+            <h2>🎵 Παίξε Μουσική!</h2>
+            <p class="page-subtitle">Πάτα τα πλήκτρα και έπειτα επανάλαβε τον ρυθμό!</p>
+            
+            <div class="music-container">
+                <div class="piano-keys" id="pianoKeys">
+                    <!-- Piano keys will be generated -->
+                </div>
+                
+                <div class="music-pattern">
+                    <h3>Παίξε αυτόν τον ρυθμό:</h3>
+                    <div class="pattern-display" id="patternDisplay">
+                        <!-- Pattern will be shown here -->
+                    </div>
+                    <p style="margin-top: 15px; color: #666;">Πάτα τα πλήκτρα με τη σειρά!</p>
+                </div>
+                
+                <div class="canvas-controls">
+                    <button class="control-btn clear-btn" onclick="resetMusic()">Νέος Ρυθμός</button>
+                </div>
+                
+                <div class="success-message" id="musicSuccess">🎶 Τέλεια! Έπαιξες σωστά τον ρυθμό!</div>
+            </div>
+        </div>
+        
+        <!-- Activity 9: Clock -->
+        <div id="activity9" class="page">
+            <h2>🕐 Μάθε την Ώρα!</h2>
+            <p class="page-subtitle">Τι ώρα δείχνει το ρολόι;</p>
+            
+            <div class="clock-container">
+                <div class="clock-display" id="clockDisplay">
+                    <div class="clock-numbers" id="clockNumbers">
+                        <!-- Clock numbers will be generated -->
+                    </div>
+                    <div class="clock-hand hour-hand" id="hourHand"></div>
+                    <div class="clock-hand minute-hand" id="minuteHand"></div>
+                    <div class="clock-center"></div>
+                </div>
+                
+                <p style="font-size: 1.3em; margin: 30px 0; font-weight: bold;">Ποια ώρα είναι;</p>
+                
+                <div class="time-options" id="timeOptions">
+                    <!-- Time options will be generated -->
+                </div>
+                
+                <div class="canvas-controls">
+                    <button class="control-btn clear-btn" onclick="resetClock()">Νέο Ρολόι</button>
+                </div>
+                
+                <div class="success-message" id="clockSuccess">⏰ Μπράβο! Διάβασες σωστά την ώρα!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentPage = '';
+        const foundDifferences = new Set();
+        let currentColor = '#ff6b6b';
+        let isDrawing = false;
+        let mazeCompleted = false;
+        let currentMazeIndex = 0;
+        
+        // Show page function
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            currentPage = pageId;
+            
+            // Scroll to the page smoothly
+            setTimeout(() => {
+                const pageElement = document.getElementById(pageId);
+                pageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+            
+            // Initialize activities
+            if (pageId === 'activity1') initDrawing();
+            if (pageId === 'activity2') resetDifferences();
+            if (pageId === 'activity3') initMaze();
+            if (pageId === 'activity4') initCounting();
+            if (pageId === 'activity5') initMemory();
+            if (pageId === 'activity6') initPaint();
+            if (pageId === 'activity7') initPuzzle();
+            if (pageId === 'activity8') initMusic();
+            if (pageId === 'activity9') initClock();
+        }
+        
+        // Activity 1: Drawing - Multiple templates
+        let currentDrawingIndex = 0;
+        const drawingTemplates = [
+            {
+                title: 'το Σπίτι μας',
+                dots: [
+                    [100, 400], [100, 250], [150, 180], [250, 120], [350, 180],
+                    [400, 250], [400, 400], [210, 400], [210, 310], [280, 310],
+                    [280, 400], [330, 280], [370, 320]
+                ]
+            },
+            {
+                title: 'ένα Δέντρο',
+                dots: [
+                    [250, 400], [230, 400], [230, 280], [270, 280], [270, 400],
+                    [150, 250], [180, 180], [220, 120], [250, 90], [280, 120],
+                    [320, 180], [350, 250], [250, 280]
+                ]
+            },
+            {
+    title: 'ένα Δέντρο',
+    dots: [
+        [250, 120], // 1 top leaves
+        [200, 150], // 2 left top
+        [170, 200], // 3 left
+        [200, 250], // 4 left bottom
+        [250, 270], // 5 bottom leaves
+        [300, 250], // 6 right bottom
+        [330, 200], // 7 right
+        [300, 150], // 8 right top
+
+        [230, 270], // 9 trunk left
+        [230, 400], // 10 trunk bottom left
+        [270, 400], // 11 trunk bottom right
+        [270, 270], // 12 trunk right
+    ]
+}
+
+        ];
+        
+        function initDrawing() {
+            loadDrawingTemplate(currentDrawingIndex);
+        }
+        
+        function loadDrawingTemplate(index) {
+            const canvas = document.getElementById('drawCanvas');
+            const ctx = canvas.getContext('2d');
+            const template = drawingTemplates[index];
+            
+            // Update UI
+            document.getElementById('drawingNumber').textContent = index + 1;
+            document.getElementById('drawingSubtitle').textContent = 
+                `Ένωσε τις τελείες και βάψε ${template.title} με τα αγαπημένα σου χρώματα!`;
+            
+            // Clear and redraw
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw dots
+            ctx.fillStyle = '#667eea';
+            template.dots.forEach(([x, y]) => {
+                ctx.beginPath();
+                ctx.arc(x, y, 12, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Draw numbers
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            template.dots.forEach(([x, y], i) => {
+                ctx.fillText(i + 1, x, y);
+            });
+        }
+        
+        function nextDrawing() {
+            currentDrawingIndex = (currentDrawingIndex + 1) % drawingTemplates.length;
+            loadDrawingTemplate(currentDrawingIndex);
+        }
+        
+        function clearCanvas() {
+            loadDrawingTemplate(currentDrawingIndex);
+        }
+        
+        function startDrawing(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const canvas = document.getElementById('drawCanvas');
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.moveTo(x * (canvas.width / rect.width), y * (canvas.height / rect.height));
+        }
+        
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            
+            const canvas = document.getElementById('drawCanvas');
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.lineTo(x * (canvas.width / rect.width), y * (canvas.height / rect.height));
+            ctx.stroke();
+        }
+        
+        function stopDrawing() {
+            isDrawing = false;
+        }
+        
+        function changeColor(color) {
+            currentColor = color;
+        }
+        
+        // Setup drawing events
+        window.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('drawCanvas');
+            canvas.addEventListener('touchstart', startDrawing, { passive: false });
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', stopDrawing);
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+        });
+        
+        // Activity 2: Find Differences - Multiple games with real SVG
+        let currentDifferencesIndex = 0;
+        
+        const differencesGames = [
+            {
+                title: 'Το δωμάτιο του Νίκου',
+                subtitle: 'έχει κάτι περίεργο... Μπορείς να βρεις τι άλλαξε;',
+                before: 'Πρωί ☀️',
+                after: 'Απόγευμα 🌙',
+                svgBefore: `
+                    <svg width="100%" height="85%" viewBox="0 0 300 300">
+                        <rect x="10" y="10" width="280" height="280" fill="#e8f4f8" stroke="#333" stroke-width="3"/>
+                        <rect x="30" y="40" width="80" height="80" fill="#87ceeb" stroke="#333" stroke-width="2"/>
+                        <line x1="70" y1="40" x2="70" y2="120" stroke="#333" stroke-width="2"/>
+                        <line x1="30" y1="80" x2="110" y2="80" stroke="#333" stroke-width="2"/>
+                        <rect x="150" y="180" width="120" height="80" fill="#ff9a9e" stroke="#333" stroke-width="2"/>
+                        <rect x="150" y="160" width="30" height="20" fill="#ff9a9e" stroke="#333" stroke-width="2"/>
+                        <rect x="30" y="200" width="80" height="10" fill="#8b4513" stroke="#333" stroke-width="2"/>
+                        <rect x="45" y="210" width="5" height="50" fill="#8b4513" stroke="#333" stroke-width="1"/>
+                        <rect x="100" y="210" width="5" height="50" fill="#8b4513" stroke="#333" stroke-width="1"/>
+                        <circle cx="70" cy="195" r="8" fill="#ffeb3b" stroke="#333" stroke-width="2"/>
+                        <rect x="180" y="140" width="20" height="15" fill="#4ecdc4" stroke="#333" stroke-width="2"/>
+                        <circle cx="240" cy="60" r="20" fill="#fff" stroke="#333" stroke-width="2"/>
+                        <line x1="240" y1="60" x2="240" y2="50" stroke="#333" stroke-width="2"/>
+                        <line x1="240" y1="60" x2="248" y2="60" stroke="#333" stroke-width="2"/>
+                    </svg>`,
+                svgAfter: `
+                    <svg width="100%" height="85%" viewBox="0 0 300 300">
+                        <rect x="10" y="10" width="280" height="280" fill="#e8f4f8" stroke="#333" stroke-width="3"/>
+                        <rect x="30" y="40" width="80" height="80" fill="#1a1a2e" stroke="#333" stroke-width="2"/>
+                        <circle cx="70" cy="80" r="15" fill="#f4f4f4" stroke="#333" stroke-width="1"/>
+                        <line x1="70" y1="40" x2="70" y2="120" stroke="#333" stroke-width="2"/>
+                        <line x1="30" y1="80" x2="110" y2="80" stroke="#333" stroke-width="2"/>
+                        <rect x="150" y="180" width="120" height="80" fill="#a18cd1" stroke="#333" stroke-width="2"/>
+                        <rect x="150" y="160" width="30" height="20" fill="#a18cd1" stroke="#333" stroke-width="2"/>
+                        <rect x="30" y="200" width="80" height="10" fill="#8b4513" stroke="#333" stroke-width="2"/>
+                        <rect x="45" y="210" width="5" height="50" fill="#8b4513" stroke="#333" stroke-width="1"/>
+                        <rect x="100" y="210" width="5" height="50" fill="#8b4513" stroke="#333" stroke-width="1"/>
+                        <circle cx="70" cy="195" r="8" fill="#ffeb3b" stroke="#333" stroke-width="2"/>
+                        <circle cx="90" cy="195" r="8" fill="#ff6b6b" stroke="#333" stroke-width="2"/>
+                        <rect x="180" y="140" width="20" height="15" fill="#4ecdc4" stroke="#333" stroke-width="2"/>
+                        <circle cx="240" cy="60" r="20" fill="#fff" stroke="#333" stroke-width="2"/>
+                        <line x1="240" y1="60" x2="232" y2="52" stroke="#333" stroke-width="2"/>
+                        <line x1="240" y1="60" x2="248" y2="68" stroke="#333" stroke-width="2"/>
+                        <rect x="50" y="188" width="25" height="8" fill="#ff8b94" stroke="#333" stroke-width="1"/>
+                    </svg>`,
+                differences: [
+                    { top: '25%', left: '25%', title: 'Παράθυρο' },
+                    { top: '60%', left: '62%', title: 'Κρεβάτι' },
+                    { top: '63%', left: '30%', title: 'Παιχνίδι' },
+                    { top: '22%', left: '75%', title: 'Ρολόι' },
+                    { top: '64%', left: '18%', title: 'Βιβλίο' }
+                ]
+            },
+            {
+                title: 'Η κουζίνα',
+                subtitle: 'έχει 5 διαφορές! Μπορείς να τις βρεις όλες;',
+                before: 'Πριν 🍳',
+                after: 'Μετά 🍽️',
+                svgBefore: `
+                    <svg width="100%" height="85%" viewBox="0 0 300 300">
+                        <rect x="10" y="10" width="280" height="280" fill="#fff8dc" stroke="#333" stroke-width="3"/>
+                        <rect x="20" y="30" width="100" height="120" fill="#8b4513" stroke="#333" stroke-width="2"/>
+                        <rect x="25" y="40" width="90" height="30" fill="#d4a574" stroke="#333" stroke-width="2"/>
+                        <rect x="150" y="180" width="40" height="60" fill="#ff6b6b" stroke="#333" stroke-width="2"/>
+                        <rect x="155" y="220" width="5" height="20" fill="#333"/>
+                        <rect x="180" y="220" width="5" height="20" fill="#333"/>
+                        <circle cx="240" cy="60" r="20" fill="#ffeb3b" stroke="#333" stroke-width="2"/>
+                        <rect x="50" y="200" width="60" height="10" fill="#8b4513" stroke="#333" stroke-width="2"/>
+                        <circle cx="80" cy="195" r="6" fill="#4ecdc4" stroke="#333" stroke-width="2"/>
+                    </svg>`,
+                svgAfter: `
+                    <svg width="100%" height="85%" viewBox="0 0 300 300">
+                        <rect x="10" y="10" width="280" height="280" fill="#fff8dc" stroke="#333" stroke-width="3"/>
+                        <rect x="20" y="30" width="100" height="120" fill="#654321" stroke="#333" stroke-width="2"/>
+                        <rect x="25" y="40" width="90" height="30" fill="#d4a574" stroke="#333" stroke-width="2"/>
+                        <rect x="150" y="180" width="40" height="60" fill="#4ecdc4" stroke="#333" stroke-width="2"/>
+                        <rect x="155" y="220" width="5" height="20" fill="#333"/>
+                        <rect x="180" y="220" width="5" height="20" fill="#333"/>
+                        <circle cx="240" cy="60" r="20" fill="#ff6b6b" stroke="#333" stroke-width="2"/>
+                        <circle cx="260" cy="80" r="15" fill="#ffa500" stroke="#333" stroke-width="2"/>
+                        <rect x="50" y="200" width="60" height="10" fill="#8b4513" stroke="#333" stroke-width="2"/>
+                        <circle cx="80" cy="195" r="6" fill="#4ecdc4" stroke="#333" stroke-width="2"/>
+                        <circle cx="95" cy="195" r="6" fill="#ff8b94" stroke="#333" stroke-width="2"/>
+                    </svg>`,
+                differences: [
+                    { top: '25%', left: '22%', title: 'Ντουλάπι' },
+                    { top: '68%', left: '55%', title: 'Καρέκλα' },
+                    { top: '22%', left: '78%', title: 'Φρούτο' },
+                    { top: '30%', left: '85%', title: 'Πορτοκάλι' },
+                    { top: '66%', left: '30%', title: 'Πιάτο' }
+                ]
+            },
+            {
+                title: 'Το σαλόνι',
+                subtitle: 'Κάτι άλλαξε! Βρες τις 5 διαφορές!',
+                before: 'Πριν 📺',
+                after: 'Μετά 🎮',
+                svgBefore: `
+                    <svg width="100%" height="85%" viewBox="0 0 300 300">
+                        <rect x="10" y="10" width="280" height="280" fill="#f0f0f0" stroke="#333" stroke-width="3"/>
+                        <rect x="100" y="50" width="100" height="70" fill="#333" stroke="#333" stroke-width="2"/>
+                        <rect x="105" y="55" width="90" height="60" fill="#87ceeb" stroke="#333" stroke-width="1"/>
+                        <rect x="140" y="120" width="5" height="30" fill="#333"/>
+                        <rect x="120" y="150" width="60" height="10" fill="#8b4513" stroke="#333" stroke-width="2"/>
+                        <rect x="30" y="180" width="80" height="60" fill="#ff9a9e" stroke="#333" stroke-width="2"/>
+                        <rect x="190" y="180" width="80" height="60" fill="#ff9a9e" stroke="#333" stroke-width="2"/>
+                        <circle cx="240" cy="80" r="15" fill="#ffeb3b" stroke="#333" stroke-width="2"/>
+                        <rect x="30" y="260" width="100" height="20" fill="#8b4513" stroke="#333" stroke-width="2"/>
+                    </svg>`,
+                svgAfter: `
+                    <svg width="100%" height="85%" viewBox="0 0 300 300">
+                        <rect x="10" y="10" width="280" height="280" fill="#f0f0f0" stroke="#333" stroke-width="3"/>
+                        <rect x="100" y="50" width="100" height="70" fill="#333" stroke="#333" stroke-width="2"/>
+                        <rect x="105" y="55" width="90" height="60" fill="#4ecdc4" stroke="#333" stroke-width="1"/>
+                        <rect x="140" y="120" width="5" height="30" fill="#333"/>
+                        <rect x="120" y="150" width="60" height="10" fill="#8b4513" stroke="#333" stroke-width="2"/>
+                        <rect x="30" y="180" width="80" height="60" fill="#a18cd1" stroke="#333" stroke-width="2"/>
+                        <rect x="190" y="180" width="80" height="60" fill="#ff9a9e" stroke="#333" stroke-width="2"/>
+                        <circle cx="240" cy="80" r="15" fill="#ff6b6b" stroke="#333" stroke-width="2"/>
+                        <circle cx="260" cy="100" r="12" fill="#a8e6cf" stroke="#333" stroke-width="2"/>
+                        <rect x="30" y="260" width="100" height="20" fill="#8b4513" stroke="#333" stroke-width="2"/>
+                        <rect x="50" y="265" width="20" height="10" fill="#4ecdc4" stroke="#333" stroke-width="1"/>
+                    </svg>`,
+                differences: [
+                    { top: '28%', left: '48%', title: 'Τηλεόραση' },
+                    { top: '68%', left: '22%', title: 'Καναπές' },
+                    { top: '28%', left: '78%', title: 'Λάμπα' },
+                    { top: '35%', left: '85%', title: 'Διακόσμηση' },
+                    { top: '88%', left: '18%', title: 'Βιβλίο' }
+                ]
+            }
+        ];
+        
+        function resetDifferences() {
+            loadDifferencesGame(currentDifferencesIndex);
+        }
+        
+        function loadDifferencesGame(index) {
+            const game = differencesGames[index];
+            foundDifferences.clear();
+            
+            // Update UI
+            document.getElementById('differencesNumber').textContent = index + 1;
+            document.getElementById('differencesSubtitle').textContent = game.title + ' ' + game.subtitle;
+            document.getElementById('differencesFound').textContent = '0';
+            document.getElementById('differencesSuccess').classList.remove('show');
+            
+            // Generate HTML with real SVG images and clickable spots on BOTH sides
+            const container = document.getElementById('differencesContainer');
+            container.innerHTML = `
+                <div class="image-box" style="position: relative;">
+                    <h3 style="text-align: center; margin-bottom: 15px;">${game.before}</h3>
+                    ${game.svgBefore}
+                    ${game.differences.map((diff, i) => `
+                        <div class="difference-spot" style="top: ${diff.top}; left: ${diff.left};" 
+                             onclick="foundDifference(this, ${i + 1})" title="${diff.title}"></div>
+                    `).join('')}
+                </div>
+                <div class="image-box" style="position: relative;">
+                    <h3 style="text-align: center; margin-bottom: 15px;">${game.after}</h3>
+                    ${game.svgAfter}
+                    ${game.differences.map((diff, i) => `
+                        <div class="difference-spot" style="top: ${diff.top}; left: ${diff.left};" 
+                             onclick="foundDifference(this, ${i + 1})" title="${diff.title}"></div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        function foundDifference(element, id) {
+            if (foundDifferences.has(id)) return;
+            
+            foundDifferences.add(id);
+            element.classList.add('found');
+            document.getElementById('differencesFound').textContent = foundDifferences.size;
+            
+            if (foundDifferences.size === 5) {
+                setTimeout(() => {
+                    document.getElementById('differencesSuccess').classList.add('show');
+                }, 500);
+            }
+        }
+        
+        function nextDifferences() {
+            currentDifferencesIndex = (currentDifferencesIndex + 1) % differencesGames.length;
+            loadDifferencesGame(currentDifferencesIndex);
+        }
+        
+        // Activity 3: Maze
+        // Maze configurations
+        const mazeConfigs = [
+            {
+                title: 'Μπισκότα',
+                emoji: '🍪',
+                startX: 435, startY: 200, endX: 315, endY: 460,
+                obstacles: [
+                    { x1: 120, y1: 15, x2: 120, y2: 120 },
+                    { x1: 240, y1: 15, x2: 240, y2: 180 },
+                    { x1: 360, y1: 15, x2: 360, y2: 120 },
+                    { x1: 15, y1: 150, x2: 180, y2: 150 },
+                    { x1: 300, y1: 150, x2: 485, y2: 150 },
+                    { x1: 120, y1: 220, x2: 120, y2: 350 },
+                    { x1: 360, y1: 220, x2: 360, y2: 350 },
+                    { x1: 15, y1: 280, x2: 60, y2: 280 },
+                    { x1: 180, y1: 280, x2: 300, y2: 280 },
+                    { x1: 420, y1: 280, x2: 485, y2: 280 },
+                    { x1: 240, y1: 350, x2: 240, y2: 485 },
+                    { x1: 15, y1: 420, x2: 180, y2: 420 },
+                    { x1: 300, y1: 420, x2: 485, y2: 420 }
+                ]
+            },
+            {
+                title: 'Παιχνίδι',
+                emoji: '🧸',
+                startX: 60, startY: 60, endX: 440, endY: 440,
+                obstacles: [
+                    { x1: 15, y1: 150, x2: 350, y2: 150 },
+                    { x1: 150, y1: 15, x2: 150, y2: 280 },
+                    { x1: 250, y1: 220, x2: 485, y2: 220 },
+                    { x1: 350, y1: 15, x2: 350, y2: 150 },
+                    { x1: 250, y1: 350, x2: 250, y2: 485 },
+                    { x1: 15, y1: 350, x2: 180, y2: 350 },
+                    { x1: 380, y1: 290, x2: 380, y2: 485 },
+                    { x1: 80, y1: 250, x2: 80, y2: 485 }
+                ]
+            },
+            {
+                title: 'Γάλα',
+                emoji: '🥛',
+                startX: 250, startY: 60, endX: 250, endY: 440,
+                obstacles: [
+                    { x1: 100, y1: 15, x2: 100, y2: 200 },
+                    { x1: 400, y1: 15, x2: 400, y2: 200 },
+                    { x1: 15, y1: 200, x2: 200, y2: 200 },
+                    { x1: 300, y1: 200, x2: 485, y2: 200 },
+                    { x1: 200, y1: 130, x2: 200, y2: 350 },
+                    { x1: 300, y1: 130, x2: 300, y2: 350 },
+                    { x1: 100, y1: 300, x2: 100, y2: 485 },
+                    { x1: 400, y1: 300, x2: 400, y2: 485 },
+                    { x1: 15, y1: 350, x2: 150, y2: 350 },
+                    { x1: 350, y1: 350, x2: 485, y2: 350 }
+                ]
+            }
+        ];
+        
+        function initMaze() {
+            const canvas = document.getElementById('mazeCanvas');
+            const ctx = canvas.getContext('2d');
+            const config = mazeConfigs[currentMazeIndex];
+            
+            mazeCompleted = false;
+            document.getElementById('mazeSuccess').classList.remove('show');
+            
+            // Clear and setup
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#fff9e6';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw outer border
+            ctx.strokeStyle = '#764ba2';
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.strokeRect(15, 15, 470, 470);
+            
+            // Draw obstacles
+            ctx.beginPath();
+            config.obstacles.forEach(obs => {
+                ctx.moveTo(obs.x1, obs.y1);
+                ctx.lineTo(obs.x2, obs.y2);
+            });
+            ctx.stroke();
+            
+            // Draw start
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(config.startX - 35, config.startY - 35, 70, 70);
+            ctx.strokeStyle = '#ff9a9e';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(config.startX - 35, config.startY - 35, 70, 70);
+            ctx.font = 'bold 45px Arial';
+            ctx.fillText('👧', config.startX - 28, config.startY + 15);
+            ctx.fillStyle = '#ff9a9e';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('ΑΡΧΗ', config.startX - 20, config.startY + 33);
+            
+            // Draw end
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(config.endX - 45, config.endY - 25, 90, 50);
+            ctx.strokeStyle = '#84fab0';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(config.endX - 45, config.endY - 25, 90, 50);
+            ctx.font = 'bold 35px Arial';
+            ctx.fillText(config.emoji, config.endX - 35, config.endY + 10);
+            ctx.fillStyle = '#84fab0';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('ΤΕΛΟΣ', config.endX, config.endY);
+            
+            // Setup drawing events
+            let drawing = false;
+            
+            function getMazeCoords(e) {
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                return {
+                    x: x * (canvas.width / rect.width),
+                    y: y * (canvas.height / rect.height)
+                };
+            }
+            
+            function startMazeDrawing(e) {
+                e.preventDefault();
+                const coords = getMazeCoords(e);
+                if (Math.abs(coords.x - config.startX) < 50 && Math.abs(coords.y - config.startY) < 50) {
+                    drawing = true;
+                    ctx.beginPath();
+                    ctx.moveTo(coords.x, coords.y);
+                }
+            }
+            
+            function drawMazePath(e) {
+                if (!drawing) return;
+                e.preventDefault();
+                const coords = getMazeCoords(e);
+                ctx.strokeStyle = '#ff6b6b';
+                ctx.lineWidth = 6;
+                ctx.lineCap = 'round';
+                ctx.lineTo(coords.x, coords.y);
+                ctx.stroke();
+                
+                // Check if reached end
+                if (Math.abs(coords.x - config.endX) < 50 && Math.abs(coords.y - config.endY) < 40) {
+                    if (!mazeCompleted) {
+                        mazeCompleted = true;
+                        drawing = false;
+                        ctx.strokeStyle = '#84fab0';
+                        ctx.lineWidth = 10;
+                        ctx.stroke();
+                        setTimeout(() => {
+                            document.getElementById('mazeSuccess').classList.add('show');
+                        }, 300);
+                    }
+                }
+            }
+            
+            function stopMazeDrawing() {
+                drawing = false;
+            }
+            
+            // Add event listeners
+            canvas.addEventListener('touchstart', startMazeDrawing, { passive: false });
+            canvas.addEventListener('touchmove', drawMazePath, { passive: false });
+            canvas.addEventListener('touchend', stopMazeDrawing);
+            canvas.addEventListener('mousedown', startMazeDrawing);
+            canvas.addEventListener('mousemove', drawMazePath);
+            canvas.addEventListener('mouseup', stopMazeDrawing);
+        }
+        
+        function resetMaze() {
+            initMaze();
+        }
+        
+        function nextMaze() {
+            currentMazeIndex = (currentMazeIndex + 1) % 3;
+            document.getElementById('mazeNumber').textContent = currentMazeIndex + 1;
+            
+            const subtitles = [
+                'Σχεδίασε το δρόμο με το δάχτυλό σου από το δωμάτιο μέχρι τα μπισκότα! 🍪',
+                'Βοήθησε τον Γιάννη να φτάσει στο παιχνίδι του! 🧸',
+                'Οδήγησε τη γάτα στο γάλα! 🥛'
+            ];
+            document.getElementById('mazeSubtitle').textContent = subtitles[currentMazeIndex];
+            initMaze();
+        }
+        
+        // Activity 4: Counting
+        function initCounting() {
+            const itemsGrid = document.getElementById('itemsGrid');
+            const numberButtons = document.getElementById('numberButtons');
+            document.getElementById('countingSuccess').classList.remove('show');
+            
+            // Random number of items (4-8)
+            const correctAnswer = Math.floor(Math.random() * 5) + 4;
+            
+            // Toy emojis
+            const toys = ['🧸', '🚗', '⚽', '🎨', '🎲', '🪁', '🎪'];
+            const selectedToy = toys[Math.floor(Math.random() * toys.length)];
+            
+            // Generate items
+            itemsGrid.innerHTML = '';
+            for (let i = 0; i < correctAnswer; i++) {
+                const item = document.createElement('div');
+                item.className = 'count-item';
+                item.textContent = selectedToy;
+                item.onclick = function() {
+                    this.classList.toggle('clicked');
+                };
+                itemsGrid.appendChild(item);
+            }
+            
+            // Generate number buttons (correctAnswer ± 2)
+            numberButtons.innerHTML = '';
+            const numbers = [];
+            for (let i = Math.max(1, correctAnswer - 2); i <= correctAnswer + 2; i++) {
+                numbers.push(i);
+            }
+            
+            // Shuffle numbers
+            numbers.sort(() => Math.random() - 0.5);
+            
+            numbers.forEach(num => {
+                const btn = document.createElement('button');
+                btn.className = 'number-btn';
+                btn.textContent = num;
+                btn.onclick = function() {
+                    checkAnswer(num, correctAnswer, this);
+                };
+                numberButtons.appendChild(btn);
+            });
+        }
+        
+        function checkAnswer(selected, correct, button) {
+            // Disable all buttons
+            document.querySelectorAll('.number-btn').forEach(btn => {
+                btn.disabled = true;
+            });
+            
+            if (selected === correct) {
+                button.classList.add('correct');
+                setTimeout(() => {
+                    document.getElementById('countingSuccess').classList.add('show');
+                }, 500);
+            } else {
+                button.classList.add('wrong');
+                setTimeout(() => {
+                    // Re-enable buttons
+                    document.querySelectorAll('.number-btn').forEach(btn => {
+                        btn.disabled = false;
+                        btn.classList.remove('wrong');
+                    });
+                }, 1000);
+            }
+        }
+        
+        // Activity 5: Memory Game
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+        let canFlip = true;
+        
+        function initMemory() {
+            const grid = document.getElementById('memoryGrid');
+            document.getElementById('memorySuccess').classList.remove('show');
+            matchedPairs = 0;
+            moves = 0;
+            flippedCards = [];
+            canFlip = true;
+            
+            document.getElementById('pairsFound').textContent = '0';
+            document.getElementById('moves').textContent = '0';
+            
+            // House items emojis - only 4 for 8 cards total (fits 3 columns better)
+            const items = ['🛏️', '🪑', '📺', '🧸'];
+            
+            // Create pairs and shuffle
+            memoryCards = [...items, ...items];
+            memoryCards.sort(() => Math.random() - 0.5);
+            
+            // Create cards
+            grid.innerHTML = '';
+            memoryCards.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.innerHTML = `
+                    <div class="back">❓</div>
+                    <div class="front">${item}</div>
+                `;
+                card.onclick = () => flipCard(card, index, item);
+                grid.appendChild(card);
+            });
+        }
+        
+        function flipCard(card, index, item) {
+            if (!canFlip || card.classList.contains('flipped') || card.classList.contains('matched')) {
+                return;
+            }
+            
+            card.classList.add('flipped');
+            flippedCards.push({ card, index, item });
+            
+            if (flippedCards.length === 2) {
+                canFlip = false;
+                moves++;
+                document.getElementById('moves').textContent = moves;
+                
+                const [first, second] = flippedCards;
+                
+                if (first.item === second.item && first.index !== second.index) {
+                    // Match found!
+                    setTimeout(() => {
+                        first.card.classList.add('matched');
+                        second.card.classList.add('matched');
+                        matchedPairs++;
+                        document.getElementById('pairsFound').textContent = matchedPairs;
+                        
+                        flippedCards = [];
+                        canFlip = true;
+                        
+                        if (matchedPairs === 4) {
+                            setTimeout(() => {
+                                document.getElementById('memorySuccess').classList.add('show');
+                            }, 500);
+                        }
+                    }, 500);
+                } else {
+                    // No match
+                    setTimeout(() => {
+                        first.card.classList.remove('flipped');
+                        second.card.classList.remove('flipped');
+                        flippedCards = [];
+                        canFlip = true;
+                    }, 1000);
+                }
+            }
+        }
+        
+        function resetMemory() {
+            initMemory();
+        }
+        
+        // Activity 6: Paint by Numbers
+        let paintColors = {
+            '1': '#ff6b6b',
+            '2': '#4ecdc4',
+            '3': '#ffe66d',
+            '4': '#a8e6cf',
+            '5': '#ff8b94',
+            '6': '#c7b8ea'
+        };
+        let selectedPaintColor = '1';
+        let paintedAreas = new Set();
+        let totalAreas = 0;
+        
+        function initPaint() {
+            const canvas = document.getElementById('paintCanvas');
+            const ctx = canvas.getContext('2d');
+            const palette = document.getElementById('paintPalette');
+            
+            paintedAreas.clear();
+            document.getElementById('paintSuccess').classList.remove('show');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#f8f8f8';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Create color palette
+            palette.innerHTML = '';
+            Object.entries(paintColors).forEach(([num, color]) => {
+                const btn = document.createElement('div');
+                btn.className = 'paint-color';
+                if (num === selectedPaintColor) btn.classList.add('selected');
+                btn.style.background = color;
+                btn.textContent = num;
+                btn.onclick = () => selectPaintColor(num);
+                palette.appendChild(btn);
+            });
+            
+            // Draw simple flower with numbered sections
+            const sections = [
+                { x: 250, y: 150, r: 40, num: '1' },  // Top petal
+                { x: 330, y: 210, r: 40, num: '2' },  // Right petal
+                { x: 310, y: 310, r: 40, num: '3' },  // Bottom-right petal
+                { x: 190, y: 310, r: 40, num: '4' },  // Bottom-left petal
+                { x: 170, y: 210, r: 40, num: '5' },  // Left petal
+                { x: 250, y: 230, r: 50, num: '6' },  // Center
+            ];
+            
+            totalAreas = sections.length;
+            
+            // Draw sections
+            sections.forEach(section => {
+                // Draw circle outline
+                ctx.beginPath();
+                ctx.arc(section.x, section.y, section.r, 0, Math.PI * 2);
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                // Draw number
+                ctx.fillStyle = '#666';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(section.num, section.x, section.y);
+                
+                // Store section data for clicking
+                section.painted = false;
+            });
+            
+            // Add stem
+            ctx.beginPath();
+            ctx.moveTo(250, 280);
+            ctx.lineTo(250, 450);
+            ctx.strokeStyle = '#2d5016';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+            
+            // Add leaves
+            ctx.fillStyle = '#4a7c2c';
+            ctx.beginPath();
+            ctx.ellipse(220, 360, 30, 15, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(280, 380, 30, 15, Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Store sections for clicking
+            canvas.paintSections = sections;
+            
+            // Click handler
+            canvas.onclick = function(e) {
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+                const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+                
+                sections.forEach((section, index) => {
+                    const dist = Math.sqrt((x - section.x) ** 2 + (y - section.y) ** 2);
+                    if (dist < section.r && section.num === selectedPaintColor && !section.painted) {
+                        // Paint this section
+                        ctx.fillStyle = paintColors[section.num];
+                        ctx.beginPath();
+                        ctx.arc(section.x, section.y, section.r - 3, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        section.painted = true;
+                        paintedAreas.add(index);
+                        
+                        // Redraw border
+                        ctx.strokeStyle = '#333';
+                        ctx.lineWidth = 3;
+                        ctx.stroke();
+                        
+                        if (paintedAreas.size === totalAreas) {
+                            setTimeout(() => {
+                                document.getElementById('paintSuccess').classList.add('show');
+                            }, 500);
+                        }
+                    }
+                });
+            };
+            
+            // Touch handler
+            canvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+                const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+                
+                sections.forEach((section, index) => {
+                    const dist = Math.sqrt((x - section.x) ** 2 + (y - section.y) ** 2);
+                    if (dist < section.r && section.num === selectedPaintColor && !section.painted) {
+                        ctx.fillStyle = paintColors[section.num];
+                        ctx.beginPath();
+                        ctx.arc(section.x, section.y, section.r - 3, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        section.painted = true;
+                        paintedAreas.add(index);
+                        
+                        ctx.strokeStyle = '#333';
+                        ctx.lineWidth = 3;
+                        ctx.stroke();
+                        
+                        if (paintedAreas.size === totalAreas) {
+                            setTimeout(() => {
+                                document.getElementById('paintSuccess').classList.add('show');
+                            }, 500);
+                        }
+                    }
+                });
+            }, { passive: false });
+        }
+        
+        function selectPaintColor(num) {
+            selectedPaintColor = num;
+            document.querySelectorAll('.paint-color').forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.textContent === num) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+        
+        function resetPaint() {
+            initPaint();
+        }
+        
+        // Activity 7: Size Ordering Game
+        let sizeItems = [];
+        let draggedSize = null;
+        
+        function initPuzzle() {
+            const tray = document.getElementById('puzzleTray');
+            const slots = document.getElementById('sizeSlots');
+            document.getElementById('puzzleSuccess').classList.remove('show');
+            
+            // Define items with different sizes (balls of different sizes)
+            sizeItems = [
+                { emoji: '🏀', size: 5, name: 'τεράστια' },
+                { emoji: '⚽', size: 4, name: 'μεγάλη' },
+                { emoji: '🎾', size: 3, name: 'μεσαία' },
+                { emoji: '⚾', size: 2, name: 'μικρή' },
+                { emoji: '🔵', size: 1, name: 'πολύ μικρή' }
+            ];
+            
+            // Shuffle items for tray
+            const shuffled = [...sizeItems].sort(() => Math.random() - 0.5);
+            
+            // Create draggable items in tray
+            tray.innerHTML = '';
+            shuffled.forEach((item) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'puzzle-piece-draggable';
+                itemEl.textContent = item.emoji;
+                itemEl.style.fontSize = (1.5 + item.size * 0.5) + 'em';
+                itemEl.draggable = true;
+                itemEl.dataset.size = item.size;
+                
+                // Drag events
+                itemEl.addEventListener('dragstart', (e) => {
+                    draggedSize = item.size;
+                    e.dataTransfer.effectAllowed = 'move';
+                    itemEl.style.opacity = '0.5';
+                });
+                
+                itemEl.addEventListener('dragend', (e) => {
+                    itemEl.style.opacity = '1';
+                });
+                
+                // Touch events
+                let touchStartX, touchStartY;
+                itemEl.addEventListener('touchstart', (e) => {
+                    draggedSize = item.size;
+                    const touch = e.touches[0];
+                    touchStartX = touch.clientX;
+                    touchStartY = touch.clientY;
+                    itemEl.style.position = 'fixed';
+                    itemEl.style.zIndex = '1000';
+                    itemEl.style.left = (touch.clientX - 50) + 'px';
+                    itemEl.style.top = (touch.clientY - 50) + 'px';
+                }, { passive: false });
+                
+                itemEl.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    itemEl.style.left = (touch.clientX - 50) + 'px';
+                    itemEl.style.top = (touch.clientY - 50) + 'px';
+                }, { passive: false });
+                
+                itemEl.addEventListener('touchend', (e) => {
+                    const touch = e.changedTouches[0];
+                    const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+                    
+                    if (dropTarget && dropTarget.classList.contains('size-slot') && !dropTarget.classList.contains('filled')) {
+                        const slotSize = parseInt(dropTarget.dataset.slot);
+                        if (draggedSize === slotSize) {
+                            dropTarget.innerHTML = `<span style="font-size: ${1.5 + item.size * 0.5}em">${item.emoji}</span>`;
+                            dropTarget.classList.add('filled');
+                            itemEl.classList.add('placed');
+                            checkSizeOrderComplete();
+                        }
+                    }
+                    
+                    itemEl.style.position = '';
+                    itemEl.style.zIndex = '';
+                    itemEl.style.left = '';
+                    itemEl.style.top = '';
+                    draggedSize = null;
+                });
+                
+                tray.appendChild(itemEl);
+            });
+            
+            // Create slots (5 slots from smallest to largest)
+            slots.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'size-slot';
+                slot.dataset.slot = i;
+                slot.dataset.size = i === 1 ? '1️⃣' : i === 2 ? '2️⃣' : i === 3 ? '3️⃣' : i === 4 ? '4️⃣' : '5️⃣';
+                
+                slot.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    slot.classList.add('drag-over');
+                });
+                
+                slot.addEventListener('dragleave', () => {
+                    slot.classList.remove('drag-over');
+                });
+                
+                slot.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    slot.classList.remove('drag-over');
+                    
+                    if (draggedSize === i && !slot.classList.contains('filled')) {
+                        const item = sizeItems.find(it => it.size === i);
+                        slot.innerHTML = `<span style="font-size: ${1.5 + item.size * 0.5}em">${item.emoji}</span>`;
+                        slot.classList.add('filled');
+                        document.querySelector(`[data-size="${draggedSize}"]`).classList.add('placed');
+                        checkSizeOrderComplete();
+                    }
+                });
+                
+                slots.appendChild(slot);
+            }
+        }
+        
+        function checkSizeOrderComplete() {
+            const filled = document.querySelectorAll('.size-slot.filled').length;
+            if (filled === 5) {
+                setTimeout(() => {
+                    document.getElementById('puzzleSuccess').classList.add('show');
+                }, 500);
+            }
+        }
+        
+        function resetPuzzle() {
+            initPuzzle();
+        }
+        
+        // Activity 8: Music
+        let musicPattern = [];
+        let userPattern = [];
+        let isPlayingPattern = false;
+        
+        const notes = [
+            { note: 'Do', color: '#ff6b6b', sound: 262 },
+            { note: 'Re', color: '#feca57', sound: 294 },
+            { note: 'Mi', color: '#48dbfb', sound: 330 },
+            { note: 'Fa', color: '#1dd1a1', sound: 349 },
+            { note: 'Sol', color: '#a29bfe', sound: 392 }
+        ];
+        
+        function initMusic() {
+            const keysContainer = document.getElementById('pianoKeys');
+            const patternDisplay = document.getElementById('patternDisplay');
+            document.getElementById('musicSuccess').classList.remove('show');
+            
+            userPattern = [];
+            
+            // Create piano keys
+            keysContainer.innerHTML = '';
+            notes.forEach((noteData, index) => {
+                const key = document.createElement('div');
+                key.className = 'piano-key';
+                key.style.background = noteData.color;
+                key.textContent = noteData.note;
+                key.onclick = () => playNote(index);
+                keysContainer.appendChild(key);
+            });
+            
+            // Generate random pattern (3-4 notes)
+            const patternLength = Math.floor(Math.random() * 2) + 3;
+            musicPattern = [];
+            for (let i = 0; i < patternLength; i++) {
+                musicPattern.push(Math.floor(Math.random() * 5));
+            }
+            
+            // Display pattern
+            patternDisplay.innerHTML = '';
+            musicPattern.forEach(noteIndex => {
+                const noteDiv = document.createElement('div');
+                noteDiv.className = 'pattern-note';
+                noteDiv.style.background = notes[noteIndex].color;
+                noteDiv.textContent = notes[noteIndex].note;
+                patternDisplay.appendChild(noteDiv);
+            });
+        }
+        
+        function playNote(index) {
+            if (isPlayingPattern) return;
+            
+            // Visual feedback
+            const keys = document.querySelectorAll('.piano-key');
+            keys[index].style.transform = 'translateY(5px)';
+            setTimeout(() => {
+                keys[index].style.transform = '';
+            }, 200);
+            
+            // Play sound (simple beep using Web Audio API)
+            playSound(notes[index].sound);
+            
+            // Add to user pattern
+            userPattern.push(index);
+            
+            // Check if pattern matches
+            if (userPattern.length === musicPattern.length) {
+                setTimeout(() => {
+                    checkMusicPattern();
+                }, 300);
+            } else if (userPattern[userPattern.length - 1] !== musicPattern[userPattern.length - 1]) {
+                // Wrong note
+                userPattern = [];
+                setTimeout(() => {
+                    alert('Ωχ! Προσπάθησε ξανά!');
+                }, 200);
+            }
+        }
+        
+        function playSound(frequency) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+        
+        function checkMusicPattern() {
+            const correct = musicPattern.every((note, index) => note === userPattern[index]);
+            if (correct) {
+                document.getElementById('musicSuccess').classList.add('show');
+            } else {
+                userPattern = [];
+            }
+        }
+        
+        function resetMusic() {
+            initMusic();
+        }
+        
+        // Activity 9: Clock
+        let currentTime = { hour: 3, minute: 0 };
+        
+        function initClock() {
+            document.getElementById('clockSuccess').classList.remove('show');
+            
+            // Generate random time (simple hours only)
+            const hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            const randomHour = hours[Math.floor(Math.random() * hours.length)];
+            currentTime = { hour: randomHour, minute: 0 };
+            
+            // Draw clock numbers
+            const clockNumbers = document.getElementById('clockNumbers');
+            clockNumbers.innerHTML = '';
+            for (let i = 1; i <= 12; i++) {
+                const angle = (i * 30 - 90) * Math.PI / 180;
+                const x = 150 + 110 * Math.cos(angle);
+                const y = 150 + 110 * Math.sin(angle);
+                
+                const number = document.createElement('div');
+                number.className = 'clock-number';
+                number.textContent = i;
+                number.style.left = (x - 10) + 'px';
+                number.style.top = (y - 15) + 'px';
+                clockNumbers.appendChild(number);
+            }
+            
+            // Set clock hands
+            updateClockHands();
+            
+            // Create time options
+            const options = document.getElementById('timeOptions');
+            options.innerHTML = '';
+            
+            const correctAnswer = `${currentTime.hour}:00`;
+            const wrongAnswers = [];
+            
+            while (wrongAnswers.length < 2) {
+                const wrongHour = hours[Math.floor(Math.random() * hours.length)];
+                const wrongTime = `${wrongHour}:00`;
+                if (wrongTime !== correctAnswer && !wrongAnswers.includes(wrongTime)) {
+                    wrongAnswers.push(wrongTime);
+                }
+            }
+            
+            const allOptions = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
+            
+            allOptions.forEach(time => {
+                const btn = document.createElement('button');
+                btn.className = 'time-option';
+                btn.textContent = time;
+                btn.onclick = () => checkTime(time, correctAnswer, btn);
+                options.appendChild(btn);
+            });
+        }
+        
+        function updateClockHands() {
+            const hourHand = document.getElementById('hourHand');
+            const minuteHand = document.getElementById('minuteHand');
+            
+            const hourAngle = (currentTime.hour % 12) * 30;
+            const minuteAngle = currentTime.minute * 6;
+            
+            hourHand.style.transform = `rotate(${hourAngle}deg)`;
+            minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+        }
+        
+        function checkTime(selected, correct, button) {
+            document.querySelectorAll('.time-option').forEach(btn => btn.disabled = true);
+            
+            if (selected === correct) {
+                button.classList.add('correct');
+                setTimeout(() => {
+                    document.getElementById('clockSuccess').classList.add('show');
+                }, 500);
+            } else {
+                button.classList.add('wrong');
+                setTimeout(() => {
+                    document.querySelectorAll('.time-option').forEach(btn => {
+                        btn.disabled = false;
+                        btn.classList.remove('wrong');
+                    });
+                }, 1000);
+            }
+        }
+        
+        function resetClock() {
+            initClock();
+        }
+        
+        // Show first activity on load
+        window.onload = function() {
+            showPage('activity1');
+        };
+    </script>
+</body>
+</html>
