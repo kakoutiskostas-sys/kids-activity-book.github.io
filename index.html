@@ -507,39 +507,93 @@
             padding: 0 10px;
         }
         
+        .puzzle-pieces-tray {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .puzzle-piece-draggable {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            cursor: grab;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            user-select: none;
+            touch-action: none;
+        }
+        
+        .puzzle-piece-draggable:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+        
+        .puzzle-piece-draggable.placed {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
         .size-order-slots {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 8px;
             justify-content: center;
             align-items: center;
-            margin: 30px auto;
-            max-width: 400px;
-            padding: 20px;
+            margin: 10px auto;
+            max-width: 320px;
+            padding: 12px;
             background: linear-gradient(to bottom, #e8f5e9 0%, transparent 100%);
-            border-radius: 15px;
-            border: 3px dashed #764ba2;
+            border-radius: 10px;
+            border: 2px dashed #764ba2;
         }
         
         @media (min-width: 600px) {
+            .puzzle-pieces-tray {
+                gap: 12px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            
+            .puzzle-piece-draggable {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5em;
+                border-radius: 10px;
+            }
+            
             .size-order-slots {
                 flex-direction: row;
                 align-items: flex-end;
                 max-width: 550px;
+                gap: 15px;
+                margin: 30px auto;
+                padding: 20px;
+                border: 3px dashed #764ba2;
             }
         }
         
         .size-slot {
             width: 100%;
-            max-width: 120px;
-            min-height: 80px;
+            max-width: 100px;
+            min-height: 60px;
             background: rgba(255, 255, 255, 0.7);
-            border: 3px dashed #bbb;
-            border-radius: 10px;
+            border: 2px dashed #bbb;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+            padding: 6px;
             transition: all 0.3s;
             position: relative;
         }
@@ -549,16 +603,20 @@
                 width: auto;
                 flex: 1;
                 min-width: 80px;
+                min-height: 80px;
                 align-items: flex-end;
+                padding: 10px;
+                border: 3px dashed #bbb;
+                border-radius: 10px;
             }
         }
         
         .size-slot::before {
             content: attr(data-size);
             position: absolute;
-            left: 5px;
-            top: 5px;
-            font-size: 1.2em;
+            left: 4px;
+            top: 4px;
+            font-size: 0.9em;
             color: #666;
             font-weight: bold;
         }
@@ -596,31 +654,6 @@
             border-color: #667eea;
             transform: scale(1.05);
         }
-        
-        .puzzle-pieces-tray {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 20px 0;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 15px;
-        }
-        
-        .puzzle-piece-draggable {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5em;
-            cursor: grab;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-            user-select: none;
             touch-action: none;
         }
         
@@ -961,23 +994,28 @@
         <!-- Activity 7: Size Ordering -->
         <div id="activity7" class="page">
             <h2>📏 Βάλε με τη Σειρά!</h2>
-            <p class="page-subtitle">Σύρε τα αντικείμενα από το πιο μικρό στο πιο μεγάλο!</p>
+            <p class="page-subtitle" style="margin-bottom: 10px;">Σύρε τα αντικείμενα από το πιο μικρό στο πιο μεγάλο!</p>
+            
+            <div style="text-align: center; margin-bottom: 10px;">
+                <span style="font-weight: bold; color: #764ba2; font-size: 1.1em;">Σετ <span id="sizeSetNumber">1</span>/3</span>
+            </div>
             
             <div class="puzzle-container">
                 <div class="puzzle-pieces-tray" id="puzzleTray">
                     <!-- Draggable items will be generated -->
                 </div>
                 
-                <div style="text-align: center; margin: 20px 0;">
-                    <p style="font-size: 1.2em; color: #764ba2; font-weight: bold;">↓ Σύρε εδώ από μικρό σε μεγάλο ↓</p>
+                <div style="text-align: center; margin: 8px 0;">
+                    <p style="font-size: 1em; color: #764ba2; font-weight: bold;">↓ Από μικρό σε μεγάλο ↓</p>
                 </div>
                 
                 <div class="size-order-slots" id="sizeSlots">
                     <!-- Drop zones will be generated -->
                 </div>
                 
-                <div class="canvas-controls">
+                <div class="canvas-controls" style="margin-top: 10px;">
                     <button class="control-btn clear-btn" onclick="resetPuzzle()">Παίξε Ξανά</button>
+                    <button class="control-btn" style="background: #4ecdc4; color: white;" onclick="nextPuzzle()">Επόμενο Σετ →</button>
                 </div>
                 
                 <div class="success-message" id="puzzleSuccess">🎉 Συγχαρητήρια! Τα έβαλες όλα σωστά!</div>
@@ -1372,6 +1410,11 @@
                     `).join('')}
                 </div>
             `;
+        }
+        
+        function resetDifferences() {
+            currentDifferencesIndex = 0;
+            loadDifferencesGame(0);
         }
         
         function foundDifference(element, id) {
@@ -1915,20 +1958,42 @@
         // Activity 7: Size Ordering Game
         let sizeItems = [];
         let draggedSize = null;
+        let currentSizeSetIndex = 0;
+        
+        const sizeSets = [
+            [
+                { emoji: '🏀', size: 5, name: 'τεράστια' },
+                { emoji: '⚽', size: 4, name: 'μεγάλη' },
+                { emoji: '🎾', size: 3, name: 'μεσαία' },
+                { emoji: '⚾', size: 2, name: 'μικρή' },
+                { emoji: '🔵', size: 1, name: 'πολύ μικρή' }
+            ],
+            [
+                { emoji: '🐘', size: 5, name: 'ελέφαντας' },
+                { emoji: '🦁', size: 4, name: 'λιοντάρι' },
+                { emoji: '🐕', size: 3, name: 'σκύλος' },
+                { emoji: '🐈', size: 2, name: 'γάτα' },
+                { emoji: '🐁', size: 1, name: 'ποντίκι' }
+            ],
+            [
+                { emoji: '🍉', size: 5, name: 'καρπούζι' },
+                { emoji: '🍊', size: 4, name: 'πορτοκάλι' },
+                { emoji: '🍎', size: 3, name: 'μήλο' },
+                { emoji: '🍓', size: 2, name: 'φράουλα' },
+                { emoji: '🫐', size: 1, name: 'μύρτιλο' }
+            ]
+        ];
         
         function initPuzzle() {
             const tray = document.getElementById('puzzleTray');
             const slots = document.getElementById('sizeSlots');
             document.getElementById('puzzleSuccess').classList.remove('show');
             
-            // Define items with different sizes (balls of different sizes)
-            sizeItems = [
-                { emoji: '🏀', size: 5, name: 'τεράστια' },
-                { emoji: '⚽', size: 4, name: 'μεγάλη' },
-                { emoji: '🎾', size: 3, name: 'μεσαία' },
-                { emoji: '⚾', size: 2, name: 'μικρή' },
-                { emoji: '🔵', size: 1, name: 'πολύ μικρή' }
-            ];
+            // Update counter
+            document.getElementById('sizeSetNumber').textContent = currentSizeSetIndex + 1;
+            
+            // Get current set
+            sizeItems = sizeSets[currentSizeSetIndex];
             
             // Shuffle items for tray
             const shuffled = [...sizeItems].sort(() => Math.random() - 0.5);
@@ -2069,6 +2134,12 @@
         }
         
         function resetPuzzle() {
+            currentSizeSetIndex = 0;
+            initPuzzle();
+        }
+        
+        function nextPuzzle() {
+            currentSizeSetIndex = (currentSizeSetIndex + 1) % sizeSets.length;
             initPuzzle();
         }
         
@@ -2204,8 +2275,9 @@
                 const number = document.createElement('div');
                 number.className = 'clock-number';
                 number.textContent = i;
-                number.style.left = (x - 10) + 'px';
-                number.style.top = (y - 15) + 'px';
+                number.style.left = x + 'px';
+                number.style.top = y + 'px';
+                number.style.transform = 'translate(-50%, -50%)';
                 clockNumbers.appendChild(number);
             }
             
