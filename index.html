@@ -176,62 +176,57 @@
             padding: 20px;
             border: 3px solid #a18cd1;
             overflow: hidden;
-
         }
         
+        .differences-image-area {
+            position: relative;
+            width: 100%;
+            height: 85%;
+            overflow: hidden;
+        }
+
+        .differences-image-area svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .difference-marker {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 4px solid #84fab0;
+            background: rgba(132, 250, 176, 0.25);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: pulse 0.4s;
+            z-index: 20;
+        }
+
         .difference-spot {
-            /* Activity 2 FIX: Find Differences (Finger accurate + no overlap issues) */
-.differences-image-area {
-    position: relative;
-    width: 100%;
-    height: 85%;
-    overflow: hidden;
-}
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0);
+            border: 3px dashed transparent;
+            transition: all 0.25s;
+        }
 
-.differences-image-area svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
+        .difference-spot:hover {
+            border-color: rgba(132, 250, 176, 0.5);
+            background: rgba(132, 250, 176, 0.1);
+        }
 
-.difference-marker {
-    position: absolute;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: 4px solid #84fab0;
-    background: rgba(132, 250, 176, 0.25);
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    animation: pulse 0.4s;
-    z-index: 20;
-}
-
-
-.difference-spot {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0);
-    border: 3px dashed transparent;
-    transition: all 0.25s;
-}
-
-.difference-spot:hover {
-    border-color: rgba(132, 250, 176, 0.5);
-    background: rgba(132, 250, 176, 0.1);
-}
-
-.difference-spot.found {
-    border-color: #84fab0;
-    background: rgba(132, 250, 176, 0.3);
-    animation: pulse 0.5s;
-}
-
+        .difference-spot.found {
+            border-color: #84fab0;
+            background: rgba(132, 250, 176, 0.3);
+            animation: pulse 0.5s;
+        }
         
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
@@ -509,48 +504,91 @@
         .puzzle-container {
             max-width: 600px;
             margin: 0 auto;
+            padding: 0 10px;
         }
         
         .size-order-slots {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            gap: 15px;
             justify-content: center;
-            align-items: flex-end;
+            align-items: center;
             margin: 30px auto;
-            max-width: 550px;
-            min-height: 200px;
+            max-width: 400px;
             padding: 20px;
-            background: linear-gradient(to top, #e8f5e9 0%, transparent 100%);
+            background: linear-gradient(to bottom, #e8f5e9 0%, transparent 100%);
             border-radius: 15px;
             border: 3px dashed #764ba2;
         }
         
+        @media (min-width: 600px) {
+            .size-order-slots {
+                flex-direction: row;
+                align-items: flex-end;
+                max-width: 550px;
+            }
+        }
+        
         .size-slot {
-            flex: 1;
-            min-width: 80px;
+            width: 100%;
+            max-width: 120px;
+            min-height: 80px;
             background: rgba(255, 255, 255, 0.7);
             border: 3px dashed #bbb;
             border-radius: 10px;
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
             padding: 10px;
             transition: all 0.3s;
             position: relative;
         }
         
+        @media (min-width: 600px) {
+            .size-slot {
+                width: auto;
+                flex: 1;
+                min-width: 80px;
+                align-items: flex-end;
+            }
+        }
+        
         .size-slot::before {
             content: attr(data-size);
             position: absolute;
-            bottom: -25px;
-            font-size: 0.9em;
+            left: 5px;
+            top: 5px;
+            font-size: 1.2em;
             color: #666;
             font-weight: bold;
         }
         
-        .size-slot.filled {
-            background: rgba(132, 250, 176, 0.3);
+        @media (min-width: 600px) {
+            .size-slot::before {
+                left: auto;
+                top: auto;
+                bottom: -25px;
+                font-size: 0.9em;
+            }
+        }
+        
+        .size-slot.filled.correct {
+            background: rgba(132, 250, 176, 0.5);
             border-color: #00d084;
+            border-style: solid;
+            animation: correctDrop 0.5s;
+        }
+        
+        .size-slot.filled.wrong {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: #ff6b6b;
+            border-style: solid;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes correctDrop {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
         
         .size-slot.drag-over {
@@ -561,24 +599,24 @@
         
         .puzzle-pieces-tray {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
             margin: 20px 0;
-            padding: 20px;
+            padding: 15px;
             background: #f8f9fa;
             border-radius: 15px;
         }
         
         .puzzle-piece-draggable {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3em;
+            font-size: 2.5em;
             cursor: grab;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             transition: all 0.3s;
@@ -1217,11 +1255,11 @@
                         <rect x="50" y="188" width="25" height="8" fill="#ff8b94" stroke="#333" stroke-width="1"/>
                     </svg>`,
                 differences: [
-                    { y: '25%', x: '25%', title: 'Παράθυρο' },
-                    { y: '60%', x: '62%', title: 'Κρεβάτι' },
-                    { y: '63%', x: '30%', title: 'Παιχνίδι' },
-                    { y: '22%', x: '75%', title: 'Ρολόι' },
-                    { y: '64%', x: '18%', title: 'Βιβλίο' }
+                    { top: '25%', left: '25%', title: 'Παράθυρο' },
+                    { top: '60%', left: '62%', title: 'Κρεβάτι' },
+                    { top: '63%', left: '30%', title: 'Παιχνίδι' },
+                    { top: '22%', left: '75%', title: 'Ρολόι' },
+                    { top: '64%', left: '18%', title: 'Βιβλίο' }
                 ]
             },
             {
@@ -1256,11 +1294,11 @@
                         <circle cx="95" cy="195" r="6" fill="#ff8b94" stroke="#333" stroke-width="2"/>
                     </svg>`,
                 differences: [
-                    { y: '25%', x: '22%', title: 'Ντουλάπι' },
-                    { y: '68%', x: '55%', title: 'Καρέκλα' },
-                    { y: '22%', x: '78%', title: 'Φρούτο' },
-                    { y: '30%', x: '85%', title: 'Πορτοκάλι' },
-                    { y: '66%', x: '30%', title: 'Πιάτο' }
+                    { top: '25%', left: '22%', title: 'Ντουλάπι' },
+                    { top: '68%', left: '55%', title: 'Καρέκλα' },
+                    { top: '22%', left: '78%', title: 'Φρούτο' },
+                    { top: '30%', left: '85%', title: 'Πορτοκάλι' },
+                    { top: '66%', left: '30%', title: 'Πιάτο' }
                 ]
             },
             {
@@ -1295,111 +1333,65 @@
                         <rect x="50" y="265" width="20" height="10" fill="#4ecdc4" stroke="#333" stroke-width="1"/>
                     </svg>`,
                 differences: [
-                    { y: '28%', x: '48%', title: 'Τηλεόραση' },
-                    { y: '68%', x: '22%', title: 'Καναπές' },
-                    { y: '28%', x: '78%', title: 'Λάμπα' },
-                    { y: '35%', x: '85%', title: 'Διακόσμηση' },
-                    { y: '88%', x: '18%', title: 'Βιβλίο' }
+                    { top: '28%', left: '48%', title: 'Τηλεόραση' },
+                    { top: '68%', left: '22%', title: 'Καναπές' },
+                    { top: '28%', left: '78%', title: 'Λάμπα' },
+                    { top: '35%', left: '85%', title: 'Διακόσμηση' },
+                    { top: '88%', left: '18%', title: 'Βιβλίο' }
                 ]
             }
         ];
         
-       function loadDifferencesGame(index) {
-        alert("NEW loadDifferencesGame WORKS");
-
-    const game = differencesGames[index];
-    foundDifferences.clear();
-
-    document.getElementById('differencesNumber').textContent = index + 1;
-    document.getElementById('differencesSubtitle').textContent = game.title + ' ' + game.subtitle;
-    document.getElementById('differencesFound').textContent = '0';
-    document.getElementById('differencesSuccess').classList.remove('show');
-
-    const container = document.getElementById('differencesContainer');
-
-    container.innerHTML = `
-        <div class="image-box">
-            <h3 style="text-align: center; margin-bottom: 15px;">${game.before}</h3>
-            <div class="differences-image-area" id="diffAreaLeft">
-                ${game.svgBefore}
-            </div>
-        </div>
-
-        <div class="image-box">
-            <h3 style="text-align: center; margin-bottom: 15px;">${game.after}</h3>
-            <div class="differences-image-area" id="diffAreaRight">
-                ${game.svgAfter}
-            </div>
-        </div>
-    `;
-
-    // Add click detection (both sides)
-    document.getElementById("diffAreaLeft").onclick = (e) => handleDifferenceClick(e, index);
-    document.getElementById("diffAreaRight").onclick = (e) => handleDifferenceClick(e, index);
-}
-function handleDifferenceClick(e, gameIndex) {
-    alert("CLICK DETECTED");
-
-    const game = differencesGames[gameIndex];
-    const area = e.currentTarget;
-
-    const rect = area.getBoundingClientRect();
-
-    // click position in %
-    const clickX = ((e.clientX - rect.left) / rect.width) * 100;
-    const clickY = ((e.clientY - rect.top) / rect.height) * 100;
-
-    // sensitivity radius (finger friendly)
-    const tolerance = 7; // percent (increase if needed)
-
-    let foundId = null;
-
-    game.differences.forEach((diff, i) => {
-        const id = i + 1;
-
-        if (foundDifferences.has(id)) return;
-
-        const dx = clickX - diff.x;
-        const dy = clickY - diff.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < tolerance) {
-            foundId = id;
+        function loadDifferencesGame(index) {
+            const game = differencesGames[index];
+            foundDifferences.clear();
+            
+            // Update UI
+            document.getElementById('differencesNumber').textContent = index + 1;
+            document.getElementById('differencesSubtitle').textContent = game.title + ' ' + game.subtitle;
+            document.getElementById('differencesFound').textContent = '0';
+            document.getElementById('differencesSuccess').classList.remove('show');
+            
+            // Generate HTML with real SVG images and clickable spots on BOTH sides
+            const container = document.getElementById('differencesContainer');
+            container.innerHTML = `
+                <div class="image-box" style="position: relative;">
+                    <h3 style="text-align: center; margin-bottom: 15px;">${game.before}</h3>
+                    ${game.svgBefore}
+                    ${game.differences.map((diff, i) => `
+                        <div class="difference-spot" style="top: ${diff.top}; left: ${diff.left};" 
+                             onclick="foundDifference(this, ${i + 1})" title="${diff.title}"></div>
+                    `).join('')}
+                </div>
+                <div class="image-box" style="position: relative;">
+                    <h3 style="text-align: center; margin-bottom: 15px;">${game.after}</h3>
+                    ${game.svgAfter}
+                    ${game.differences.map((diff, i) => `
+                        <div class="difference-spot" style="top: ${diff.top}; left: ${diff.left};" 
+                             onclick="foundDifference(this, ${i + 1})" title="${diff.title}"></div>
+                    `).join('')}
+                </div>
+            `;
         }
-    });
-
-    if (foundId !== null) {
-        markDifference(foundId, gameIndex);
-    }
-}
-
-function markDifference(id, gameIndex) {
-    const game = differencesGames[gameIndex];
-
-    if (foundDifferences.has(id)) return;
-    foundDifferences.add(id);
-
-    // find correct coordinates
-    const diff = game.differences[id - 1];
-
-    // add marker to BOTH sides
-    ["diffAreaLeft", "diffAreaRight"].forEach(areaId => {
-        const area = document.getElementById(areaId);
-        const marker = document.createElement("div");
-        marker.className = "difference-marker";
-        marker.style.left = diff.x + "%";
-        marker.style.top = diff.y + "%";
-        area.appendChild(marker);
-    });
-
-    document.getElementById('differencesFound').textContent = foundDifferences.size;
-
-    if (foundDifferences.size === 5) {
-        setTimeout(() => {
-            document.getElementById('differencesSuccess').classList.add('show');
-        }, 500);
-    }
-}
+        
+        function foundDifference(element, id) {
+            if (foundDifferences.has(id)) return;
+            
+            foundDifferences.add(id);
+            element.classList.add('found');
+            document.getElementById('differencesFound').textContent = foundDifferences.size;
+            
+            if (foundDifferences.size === 5) {
+                setTimeout(() => {
+                    document.getElementById('differencesSuccess').classList.add('show');
+                }, 500);
+            }
+        }
+        
+        function nextDifferences() {
+            currentDifferencesIndex = (currentDifferencesIndex + 1) % differencesGames.length;
+            loadDifferencesGame(currentDifferencesIndex);
+        }
 
         
         // Activity 3: Maze
@@ -1428,33 +1420,40 @@ function markDifference(id, gameIndex) {
             {
                 title: 'Παιχνίδι',
                 emoji: '🧸',
-                startX: 60, startY: 60, endX: 440, endY: 440,
+                startX: 60, startY: 200, endX: 440, endY: 440,
                 obstacles: [
-                    { x1: 15, y1: 150, x2: 350, y2: 150 },
-                    { x1: 150, y1: 15, x2: 150, y2: 280 },
+                    { x1: 150, y1: 15, x2: 150, y2: 120 },
+                    { x1: 350, y1: 15, x2: 350, y2: 180 },
+                    { x1: 15, y1: 150, x2: 280, y2: 150 },
                     { x1: 250, y1: 220, x2: 485, y2: 220 },
-                    { x1: 350, y1: 15, x2: 350, y2: 150 },
                     { x1: 250, y1: 350, x2: 250, y2: 485 },
                     { x1: 15, y1: 350, x2: 180, y2: 350 },
-                    { x1: 380, y1: 290, x2: 380, y2: 485 },
-                    { x1: 80, y1: 250, x2: 80, y2: 485 }
+                    { x1: 380, y1: 290, x2: 380, y2: 485 }
                 ]
             },
             {
                 title: 'Γάλα',
                 emoji: '🥛',
-                startX: 250, startY: 60, endX: 250, endY: 440,
+                startX: 60, startY: 440, endX: 440, endY: 60,
                 obstacles: [
-                    { x1: 100, y1: 15, x2: 100, y2: 200 },
-                    { x1: 400, y1: 15, x2: 400, y2: 200 },
-                    { x1: 15, y1: 200, x2: 200, y2: 200 },
-                    { x1: 300, y1: 200, x2: 485, y2: 200 },
-                    { x1: 200, y1: 130, x2: 200, y2: 350 },
-                    { x1: 300, y1: 130, x2: 300, y2: 350 },
-                    { x1: 100, y1: 300, x2: 100, y2: 485 },
-                    { x1: 400, y1: 300, x2: 400, y2: 485 },
-                    { x1: 15, y1: 350, x2: 150, y2: 350 },
-                    { x1: 350, y1: 350, x2: 485, y2: 350 }
+                    // Top horizontal barriers (shortened to allow access to end)
+                    { x1: 15, y1: 120, x2: 160, y2: 120 },
+                    { x1: 280, y1: 120, x2: 420, y2: 120 },
+                    // Second level
+                    { x1: 120, y1: 200, x2: 320, y2: 200 },
+                    // Vertical barriers
+                    { x1: 160, y1: 15, x2: 160, y2: 120 },
+                    { x1: 320, y1: 200, x2: 320, y2: 350 },
+                    { x1: 120, y1: 200, x2: 120, y2: 380 },
+                    // Third level
+                    { x1: 15, y1: 280, x2: 60, y2: 280 },
+                    { x1: 200, y1: 280, x2: 420, y2: 280 },
+                    // Bottom barriers
+                    { x1: 200, y1: 350, x2: 200, y2: 485 },
+                    { x1: 15, y1: 380, x2: 180, y2: 380 },
+                    // NEW: Close right side walls
+                    { x1: 420, y1: 15, x2: 420, y2: 120 },
+                    { x1: 420, y1: 280, x2: 420, y2: 380 }
                 ]
             }
         ];
@@ -1493,7 +1492,7 @@ function markDifference(id, gameIndex) {
             ctx.lineWidth = 3;
             ctx.strokeRect(config.startX - 35, config.startY - 35, 70, 70);
             ctx.font = 'bold 45px Arial';
-            ctx.fillText('👧', config.startX - 28, config.startY + 15);
+            ctx.fillText('🐱', config.startX - 28, config.startY + 15);
             ctx.fillStyle = '#ff9a9e';
             ctx.font = 'bold 14px Arial';
             ctx.fillText('ΑΡΧΗ', config.startX - 20, config.startY + 33);
@@ -1581,7 +1580,7 @@ function markDifference(id, gameIndex) {
             
             const subtitles = [
                 'Σχεδίασε το δρόμο με το δάχτυλό σου από το δωμάτιο μέχρι τα μπισκότα! 🍪',
-                'Βοήθησε τον Γιάννη να φτάσει στο παιχνίδι του! 🧸',
+                'Βοήθησε τη γάτα να φτάσει στο παιχνίδι της! 🧸',
                 'Οδήγησε τη γάτα στο γάλα! 🥛'
             ];
             document.getElementById('mazeSubtitle').textContent = subtitles[currentMazeIndex];
@@ -1977,15 +1976,33 @@ function markDifference(id, gameIndex) {
                 
                 itemEl.addEventListener('touchend', (e) => {
                     const touch = e.changedTouches[0];
-                    const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
                     
-                    if (dropTarget && dropTarget.classList.contains('size-slot') && !dropTarget.classList.contains('filled')) {
-                        const slotSize = parseInt(dropTarget.dataset.slot);
+                    // Temporarily hide the dragged element to detect what's underneath
+                    itemEl.style.display = 'none';
+                    const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+                    itemEl.style.display = '';
+                    
+                    // Check if we dropped on a slot or if it has a size-slot parent
+                    let slot = dropTarget;
+                    if (slot && !slot.classList.contains('size-slot')) {
+                        slot = dropTarget.closest('.size-slot');
+                    }
+                    
+                    if (slot && slot.classList.contains('size-slot') && !slot.classList.contains('filled')) {
+                        const slotSize = parseInt(slot.dataset.slot);
+                        
                         if (draggedSize === slotSize) {
-                            dropTarget.innerHTML = `<span style="font-size: ${1.5 + item.size * 0.5}em">${item.emoji}</span>`;
-                            dropTarget.classList.add('filled');
+                            // CORRECT!
+                            slot.innerHTML = `<span style="font-size: ${1.5 + item.size * 0.5}em">${item.emoji}</span>`;
+                            slot.classList.add('filled', 'correct');
                             itemEl.classList.add('placed');
                             checkSizeOrderComplete();
+                        } else {
+                            // WRONG!
+                            slot.classList.add('wrong');
+                            setTimeout(() => {
+                                slot.classList.remove('wrong');
+                            }, 600);
                         }
                     }
                     
@@ -2020,12 +2037,21 @@ function markDifference(id, gameIndex) {
                     e.preventDefault();
                     slot.classList.remove('drag-over');
                     
-                    if (draggedSize === i && !slot.classList.contains('filled')) {
-                        const item = sizeItems.find(it => it.size === i);
-                        slot.innerHTML = `<span style="font-size: ${1.5 + item.size * 0.5}em">${item.emoji}</span>`;
-                        slot.classList.add('filled');
-                        document.querySelector(`[data-size="${draggedSize}"]`).classList.add('placed');
-                        checkSizeOrderComplete();
+                    if (!slot.classList.contains('filled')) {
+                        if (draggedSize === i) {
+                            // CORRECT!
+                            const item = sizeItems.find(it => it.size === i);
+                            slot.innerHTML = `<span style="font-size: ${1.5 + item.size * 0.5}em">${item.emoji}</span>`;
+                            slot.classList.add('filled', 'correct');
+                            document.querySelector(`[data-size="${draggedSize}"]`).classList.add('placed');
+                            checkSizeOrderComplete();
+                        } else {
+                            // WRONG!
+                            slot.classList.add('wrong');
+                            setTimeout(() => {
+                                slot.classList.remove('wrong');
+                            }, 600);
+                        }
                     }
                 });
                 
