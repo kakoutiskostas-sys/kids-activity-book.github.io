@@ -183,6 +183,7 @@
     position: relative;
     width: 100%;
     height: 85%;
+    overflow: hidden;
 }
 
 .differences-image-area svg {
@@ -190,6 +191,20 @@
     height: 100%;
     display: block;
 }
+
+.difference-marker {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 4px solid #84fab0;
+    background: rgba(132, 250, 176, 0.25);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: pulse 0.4s;
+    z-index: 20;
+}
+
 
 .difference-spot {
     position: absolute;
@@ -1200,11 +1215,11 @@
                         <rect x="50" y="188" width="25" height="8" fill="#ff8b94" stroke="#333" stroke-width="1"/>
                     </svg>`,
                 differences: [
-                    { top: '25%', left: '25%', title: 'Παράθυρο' },
-                    { top: '60%', left: '62%', title: 'Κρεβάτι' },
-                    { top: '63%', left: '30%', title: 'Παιχνίδι' },
-                    { top: '22%', left: '75%', title: 'Ρολόι' },
-                    { top: '64%', left: '18%', title: 'Βιβλίο' }
+                    { y: '25%', x: '25%', title: 'Παράθυρο' },
+                    { y: '60%', x: '62%', title: 'Κρεβάτι' },
+                    { y: '63%', x: '30%', title: 'Παιχνίδι' },
+                    { y: '22%', x: '75%', title: 'Ρολόι' },
+                    { y: '64%', x: '18%', title: 'Βιβλίο' }
                 ]
             },
             {
@@ -1239,11 +1254,11 @@
                         <circle cx="95" cy="195" r="6" fill="#ff8b94" stroke="#333" stroke-width="2"/>
                     </svg>`,
                 differences: [
-                    { top: '25%', left: '22%', title: 'Ντουλάπι' },
-                    { top: '68%', left: '55%', title: 'Καρέκλα' },
-                    { top: '22%', left: '78%', title: 'Φρούτο' },
-                    { top: '30%', left: '85%', title: 'Πορτοκάλι' },
-                    { top: '66%', left: '30%', title: 'Πιάτο' }
+                    { y: '25%', x: '22%', title: 'Ντουλάπι' },
+                    { y: '68%', x: '55%', title: 'Καρέκλα' },
+                    { y: '22%', x: '78%', title: 'Φρούτο' },
+                    { y: '30%', x: '85%', title: 'Πορτοκάλι' },
+                    { y: '66%', x: '30%', title: 'Πιάτο' }
                 ]
             },
             {
@@ -1278,20 +1293,16 @@
                         <rect x="50" y="265" width="20" height="10" fill="#4ecdc4" stroke="#333" stroke-width="1"/>
                     </svg>`,
                 differences: [
-                    { top: '28%', left: '48%', title: 'Τηλεόραση' },
-                    { top: '68%', left: '22%', title: 'Καναπές' },
-                    { top: '28%', left: '78%', title: 'Λάμπα' },
-                    { top: '35%', left: '85%', title: 'Διακόσμηση' },
-                    { top: '88%', left: '18%', title: 'Βιβλίο' }
+                    { y: '28%', x: '48%', title: 'Τηλεόραση' },
+                    { y: '68%', x: '22%', title: 'Καναπές' },
+                    { y: '28%', x: '78%', title: 'Λάμπα' },
+                    { y: '35%', x: '85%', title: 'Διακόσμηση' },
+                    { y: '88%', x: '18%', title: 'Βιβλίο' }
                 ]
             }
         ];
         
-        function resetDifferences() {
-            loadDifferencesGame(currentDifferencesIndex);
-        }
-        
-        function loadDifferencesGame(index) {
+       function loadDifferencesGame(index) {
     const game = differencesGames[index];
     foundDifferences.clear();
 
@@ -1305,47 +1316,75 @@
     container.innerHTML = `
         <div class="image-box">
             <h3 style="text-align: center; margin-bottom: 15px;">${game.before}</h3>
-
-            <div class="differences-image-area">
+            <div class="differences-image-area" id="diffAreaLeft">
                 ${game.svgBefore}
-                ${game.differences.map((diff, i) => `
-                    <div class="difference-spot"
-                        data-diff="${i + 1}"
-                        style="top:${diff.top}; left:${diff.left};"
-                        onclick="foundDifference(${i + 1})"
-                        title="${diff.title}">
-                    </div>
-                `).join('')}
             </div>
         </div>
 
         <div class="image-box">
             <h3 style="text-align: center; margin-bottom: 15px;">${game.after}</h3>
-
-            <div class="differences-image-area">
+            <div class="differences-image-area" id="diffAreaRight">
                 ${game.svgAfter}
-                ${game.differences.map((diff, i) => `
-                    <div class="difference-spot"
-                        data-diff="${i + 1}"
-                        style="top:${diff.top}; left:${diff.left};"
-                        onclick="foundDifference(${i + 1})"
-                        title="${diff.title}">
-                    </div>
-                `).join('')}
             </div>
         </div>
     `;
+
+    // Add click detection (both sides)
+    document.getElementById("diffAreaLeft").onclick = (e) => handleDifferenceClick(e, index);
+    document.getElementById("diffAreaRight").onclick = (e) => handleDifferenceClick(e, index);
+}
+function handleDifferenceClick(e, gameIndex) {
+    const game = differencesGames[gameIndex];
+    const area = e.currentTarget;
+
+    const rect = area.getBoundingClientRect();
+
+    // click position in %
+    const clickX = ((e.clientX - rect.left) / rect.width) * 100;
+    const clickY = ((e.clientY - rect.top) / rect.height) * 100;
+
+    // sensitivity radius (finger friendly)
+    const tolerance = 7; // percent (increase if needed)
+
+    let foundId = null;
+
+    game.differences.forEach((diff, i) => {
+        const id = i + 1;
+
+        if (foundDifferences.has(id)) return;
+
+        const dx = clickX - diff.x;
+        const dy = clickY - diff.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < tolerance) {
+            foundId = id;
+        }
+    });
+
+    if (foundId !== null) {
+        markDifference(foundId, gameIndex);
+    }
 }
 
-        
-        function foundDifference(id) {
-    if (foundDifferences.has(id)) return;
+function markDifference(id, gameIndex) {
+    const game = differencesGames[gameIndex];
 
+    if (foundDifferences.has(id)) return;
     foundDifferences.add(id);
 
-    // Mark all spots of this difference on BOTH images
-    document.querySelectorAll(`.difference-spot[data-diff="${id}"]`)
-        .forEach(el => el.classList.add('found'));
+    // find correct coordinates
+    const diff = game.differences[id - 1];
+
+    // add marker to BOTH sides
+    ["diffAreaLeft", "diffAreaRight"].forEach(areaId => {
+        const area = document.getElementById(areaId);
+        const marker = document.createElement("div");
+        marker.className = "difference-marker";
+        marker.style.left = diff.x + "%";
+        marker.style.top = diff.y + "%";
+        area.appendChild(marker);
+    });
 
     document.getElementById('differencesFound').textContent = foundDifferences.size;
 
@@ -1356,11 +1395,6 @@
     }
 }
 
-        
-        function nextDifferences() {
-            currentDifferencesIndex = (currentDifferencesIndex + 1) % differencesGames.length;
-            loadDifferencesGame(currentDifferencesIndex);
-        }
         
         // Activity 3: Maze
         // Maze configurations
