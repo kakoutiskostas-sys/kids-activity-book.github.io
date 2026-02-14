@@ -1336,6 +1336,8 @@
     document.getElementById("diffAreaRight").onclick = (e) => handleDifferenceClick(e, index);
 }
 function handleDifferenceClick(e, gameIndex) {
+    alert("CLICK DETECTED");
+
     const game = differencesGames[gameIndex];
     const area = e.currentTarget;
 
